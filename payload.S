@@ -9,9 +9,21 @@
 	li a6, 0	  # Console Write
 	li a2, 0	  # High address bytes
 	jal a1, msgend	  # Load message start into a1
-	.ascii "\nTest payload\n============\n\nPowering off\n\n"
+	.ascii "\nTest payload\n============\n\nfcvt.d.w fa5,a5\n"
 	.align 1, 0	  # Instructions must start on 2-byte boundary
 msgend: auipc a0, 0	  # Load message end into a0
+	sub a0, a0, a1    # Calculate message length
+	ecall
+
+	fcvt.d.w fa5,a5
+
+	li a7, 0x4442434E # DBCN
+	li a6, 0	  # Console Write
+	li a2, 0	  # High address bytes
+	jal a1, msgen2	  # Load message start into a1
+	.ascii "Powering off\n\n"
+	.align 1, 0	  # Instructions must start on 2-byte boundary
+msgen2: auipc a0, 0	  # Load message end into a0
 	sub a0, a0, a1    # Calculate message length
 	ecall
 
