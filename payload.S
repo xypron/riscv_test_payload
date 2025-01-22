@@ -1,5 +1,7 @@
 /* SPDX-License-Identifier: MIT */
 /*
+ * Test if FPU is enabled by executing fcvt.d.w fa5,a5.
+ *
  * Write a message to the debug console and power off.
  */
 
