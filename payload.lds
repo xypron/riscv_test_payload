@@ -11,7 +11,7 @@ SECTIONS
 	. = 0x82000000;
 
 	.text : {
-		start.o(.text)
+		*start*.o(.text)
 		*(.text)
 		*(.text.*)
 	}
