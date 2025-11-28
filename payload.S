@@ -14,7 +14,7 @@
  * Entry point - save boot parameters
  */
 _start:
-	auipc	t0, 0			# Load the program counter into t0
+	auipc	s2, 0			# Load the program counter into s2
 	mv	s0, a0			# Save hart ID (a0)
 	mv	s1, a1			# Save device-tree address (a1)
 
@@ -24,7 +24,7 @@ _start:
 	la	a0, msg_load_addr	# Load message address
 	jal	ra, print_str		# Print the message
 
-	mv	a0, t0			# Move load address to a0 for printing
+	mv	a0, s2			# Move load address to a0 for printing
 	jal	ra, print_num		# Print the load address in hex
 
 /*
@@ -95,7 +95,7 @@ print_str:
  * Clobbers: a0, a6, a7, t1, t2, t3
  */
 print_num:
-	mv	t3, a0			# Move value to t0 for processing
+	mv	t3, a0			# Move value to t3 for processing
 	li	a7, 0x4442434E		# SBI extension: DBCN (Debug Console)
 	li	t1, 64			# Number of bits in register
 	li	t2, 0xA			# Threshold for hex digits (a-f vs 0-9)
