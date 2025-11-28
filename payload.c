@@ -100,6 +100,21 @@ static void print_num(unsigned long value)
 }
 
 /**
+ * poweroff() - Power off the system via SBI
+ */
+__attribute__((noreturn)) static void poweroff(void)
+{
+	/* Power off */
+	sbi_call(SBI_EXT_SRST, SBI_SRST_SYSTEM_RESET,
+		 SBI_SRST_SHUTDOWN, SBI_SRST_RESET_REASON_NONE,
+		 0, 0, 0);
+
+	/* Should never reach here */
+	while (1)
+		;
+}
+
+/**
  * main() - Main entry point from assembly startup
  * @hart_id: Boot hart ID (passed in a0)
  * @dtb: Device tree blob address (passed in a1)
@@ -123,12 +138,6 @@ __attribute__((noreturn)) void main(unsigned long hart_id, unsigned long dtb, un
 	/* Print shutdown message */
 	print_str(msg_poweroff);
 
-	/* Power off */
-	sbi_call(SBI_EXT_SRST, SBI_SRST_SYSTEM_RESET,
-		 SBI_SRST_SHUTDOWN, SBI_SRST_RESET_REASON_NONE,
-		 0, 0, 0);
-
-	/* Should never reach here */
-	while (1)
-		;
+	/* Power off the system */
+	poweroff();
 }
