@@ -24,11 +24,14 @@ payload.bin: payload.o
 start.o: start.S
 	$(AS) -march=rv64gc $(ASFLAGS) -o start.o start.S
 
-payload-c.o: payload.c
+lib.o: lib.c lib.h
+	$(CC) $(CFLAGS_64) -c -o lib.o lib.c
+
+payload-c.o: payload.c lib.h
 	$(CC) $(CFLAGS_64) -c -o payload-c.o payload.c
 
-payload-c.bin: start.o payload-c.o
-	$(LD) -T payload.lds $(LDFLAGS)=payload-c.map -o payload-c.elf start.o payload-c.o
+payload-c.bin: start.o lib.o payload-c.o
+	$(LD) -T payload.lds $(LDFLAGS)=payload-c.map -o payload-c.elf start.o lib.o payload-c.o
 	$(OBJCOPY) -O binary payload-c.elf payload-c.bin
 
 # 32-bit targets
@@ -42,18 +45,21 @@ payload32.bin: payload32.o
 start32.o: start.S
 	$(AS) -march=rv32gc $(ASFLAGS) -o start32.o start.S
 
-payload32-c.o: payload.c
+lib32.o: lib.c lib.h
+	$(CC) $(CFLAGS_32) -c -o lib32.o lib.c
+
+payload32-c.o: payload.c lib.h
 	$(CC) $(CFLAGS_32) -c -o payload32-c.o payload.c
 
-payload32-c.bin: start32.o payload32-c.o
-	$(LD) -m elf32lriscv -T payload.lds $(LDFLAGS)=payload32-c.map -o payload32-c.elf start32.o payload32-c.o
+payload32-c.bin: start32.o lib32.o payload32-c.o
+	$(LD) -m elf32lriscv -T payload.lds $(LDFLAGS)=payload32-c.map -o payload32-c.elf start32.o lib32.o payload32-c.o
 	$(OBJCOPY) -O binary payload32-c.elf payload32-c.bin
 
 clean:
 	rm -f payload.o payload.elf payload.bin payload.map
-	rm -f start.o payload-c.o payload-c.elf payload-c.bin payload-c.map
+	rm -f start.o lib.o payload-c.o payload-c.elf payload-c.bin payload-c.map
 	rm -f payload32.o payload32.elf payload32.bin payload32.map
-	rm -f start32.o payload32-c.o payload32-c.elf payload32-c.bin payload32-c.map
+	rm -f start32.o lib32.o payload32-c.o payload32-c.elf payload32-c.bin payload32-c.map
 
 check: check-asm-64 check-c-64 check-asm-32 check-c-32
 
