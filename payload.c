@@ -61,7 +61,7 @@ static inline long sbi_call(unsigned long ext, unsigned long fid,
  * print_str() - Print null-terminated string via OpenSBI
  * @str: Pointer to null-terminated string
  */
-static void print_str(const char *str)
+void print_str(const char *str)
 {
 	size_t len = 0;
 	const char *p = str;
@@ -79,7 +79,7 @@ static void print_str(const char *str)
  * print_num() - Print 64-bit value as hexadecimal
  * @value: Value to print
  */
-static void print_num(unsigned long value)
+void print_num(unsigned long value)
 {
 	int shift;
 
@@ -102,7 +102,7 @@ static void print_num(unsigned long value)
 /**
  * poweroff() - Power off the system via SBI
  */
-__attribute__((noreturn)) static void poweroff(void)
+__attribute__((noreturn)) void poweroff(void)
 {
 	/* Power off */
 	sbi_call(SBI_EXT_SRST, SBI_SRST_SYSTEM_RESET,
